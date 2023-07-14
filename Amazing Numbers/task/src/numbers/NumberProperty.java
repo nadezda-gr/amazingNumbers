@@ -3,7 +3,7 @@ package numbers;
 public class NumberProperty {
     private boolean booleanValue = false;
     private String result = "";
-    private String explanation = "";
+    private String name;
 
     public boolean isBooleanValue() {
         return booleanValue;
@@ -21,11 +21,11 @@ public class NumberProperty {
         this.result = result;
     }
 
-    public String getExplanation() {
-        return explanation;
+    public String getName() {
+        return name;
     }
 
-    public void setExplanation(String explanation) {
-        this.explanation = explanation;
+    public void setName(String name) {
+        this.name = name;
     }
 }

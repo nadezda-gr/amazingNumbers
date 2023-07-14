@@ -7,17 +7,22 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Enter a natural number:");
         Scanner scanner = new Scanner(System.in);
-        Long input = scanner.nextLong();
+        String input = scanner.nextLine();
         try {
             Number number = new Number(input);
             ValidationService.validateNaturalNumber(number.getNumberValue());
-            NumberService numberService = new NumberService(); //et saada ligi Number klassi objektidele
-            numberService.processOddOrEvenProperty(number);
-            numberService.processBuzzProperty(number);
+            processNumberProperties(number);
             PrintService printService = new PrintService();
             printService.printNumber(number);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private static void processNumberProperties(Number number) {
+        NumberService numberService = new NumberService(); //et saada ligi Number klassi objektidele
+        numberService.processEvenAndOddProperty(number);
+        numberService.processBuzzProperty(number);
+        numberService.processDuckProperty(number);
     }
 }

@@ -4,11 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Number {
+    private String stringValue;
     private Long numberValue;
     private List<NumberProperty> numberProperties = new ArrayList<>();
 
-    public Number(Long input) {
-        numberValue = input;
+    public Number(String input) {
+        stringValue = input;
+        numberValue = Long.parseLong(stringValue);
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    public void setStringValue(String stringValue) {
+        this.stringValue = stringValue;
     }
 
     public Long getNumberValue() {
