@@ -23,6 +23,12 @@ public class NumberService {
         number.getNumberProperties().add(duckProperty);
     }
 
+    public void processPalindromicProperty(Number number) {
+        boolean isPalindromic = isPalindromic(number.getStringValue());
+        NumberProperty palindromicProperty = createProperty("palindromic", isPalindromic);
+        number.getNumberProperties().add(palindromicProperty);
+    }
+
     private static boolean isBuzz(Long numberValue) {
         boolean isDivisibleBySeven = numberValue % 7 == 0;
         boolean endsWithSeven = numberValue % 10 == 7;
@@ -31,6 +37,10 @@ public class NumberService {
 
     private boolean isDuck(String stringValue) {
         return stringValue.substring(1).contains("0");
+    }
+
+    private boolean isPalindromic(String stringValue) {
+        return stringValue.equals(new StringBuilder(stringValue).reverse().toString());
     }
 
     private NumberProperty createProperty(String name, boolean booleanValue) {
@@ -47,12 +57,6 @@ public class NumberService {
 
 
 
-//
-//    public static void isAPalindromic(String userInput, Long userNumber) {
-//        StringBuilder reversed = getReversed(userInput);
-//        boolean isPalindromic = reversed.equals(userInput);
-//        System.out.println(" palindromic: " + isPalindromic);
-//    }
 //
 //    private static StringBuilder getReversed(String userInput) {
 //        int length = userInput.length();
