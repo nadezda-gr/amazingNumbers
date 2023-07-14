@@ -313,9 +313,39 @@ files:
 
     }
   learner_created: false
+- name: test/NumberProperty.java
+  visible: true
+  learner_created: true
+- name: src/numbers/Properties.java
+  visible: true
+  learner_created: true
+- name: test/PropertiesChecker.java
+  visible: true
+  learner_created: true
+- name: src/numbers/NumberService.java
+  visible: true
+  learner_created: true
+- name: test/Request.java
+  visible: true
+  learner_created: true
+- name: src/numbers/Number.java
+  visible: true
+  learner_created: true
+- name: src/numbers/ValidationService.java
+  visible: true
+  learner_created: true
+- name: src/numbers/NumberProperty.java
+  visible: true
+  learner_created: true
+- name: src/numbers/PrintService.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13198#comment
-status: Solved
+status: Failed
 feedback:
-  message: Congratulations!
-  time: "Sat, 20 May 2023 20:36:45 UTC"
+  message: |-
+    Invalid test class &#39;BuzzChecker&#39;:
+      1. Test class should have exactly one public constructor
+      2. No runnable methods
+  time: "Fri, 14 Jul 2023 16:20:31 UTC"
 record: 1
