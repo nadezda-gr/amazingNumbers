@@ -1,18 +1,10 @@
 package numbers;
 
 public enum Properties {
-    EVEN(" even"),
-    ODD(" odd"),
-    BUZZ(" buzz"),
-    DUCK(" duck"),
-    PALINDROMIC(" palindromic"),
-    GAPFUL(" gapful"),
-    SPY(" spy"),
-    SQUARE (" square"),
-    SUNNY (" sunny"),
-    JUMPING (" jumping"),
-    HAPPY (" happy"),
-    SAD(" sad");
+    EVEN("even: "),
+    ODD("odd: "),
+    BUZZ("buzz: "),
+    DUCK("duck: ");
 
     private final String text;
 
@@ -22,15 +14,5 @@ public enum Properties {
 
     public String getText() {
         return text;
-    }
-
-    public static boolean exists(String name) {
-        for (Properties p: values()) {
-            if (p.name().equals(name)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
