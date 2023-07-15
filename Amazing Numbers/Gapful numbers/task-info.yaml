@@ -652,34 +652,27 @@ files:
         }
     }
   learner_created: true
-- name: src/numbers/Properties.java
+- name: src/numbers/PrintService.java
   visible: true
-  text: |
-    package numbers;
-
-    public enum Properties {
-        EVEN("even: "),
-        ODD("odd: "),
-        BUZZ("buzz: "),
-        DUCK("duck: ");
-
-        private final String text;
-
-        Properties(String text) {
-            this.text = text;
-        }
-
-        public String getText() {
-            return text;
-        }
-    }
   learner_created: true
-- name: src/numbers/PrintResultService.java
+- name: src/numbers/Number.java
+  visible: true
+  learner_created: true
+- name: test/BuzzChecker.java
+  visible: true
+  learner_created: true
+- name: src/numbers/ValidationService.java
+  visible: true
+  learner_created: true
+- name: src/numbers/NumberProperty.java
   visible: true
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13201#comment
-status: Solved
+status: Failed
 feedback:
-  message: Congratulations!
-  time: "Wed, 24 May 2023 19:41:30 UTC"
+  message: |-
+    Invalid test class &#39;BuzzChecker&#39;:
+      1. Test class should have exactly one public constructor
+      2. No runnable methods
+  time: "Sat, 15 Jul 2023 09:30:43 UTC"
 record: 4

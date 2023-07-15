@@ -8,9 +8,11 @@ public class Number {
     private Long numberValue;
     private List<NumberProperty> numberProperties = new ArrayList<>();
 
-    public Number(String input) {
-        stringValue = input;
-        numberValue = Long.parseLong(stringValue);
+    private List<String> allTrueProperties = new ArrayList<>();
+
+    public Number(Long input) {
+        stringValue = input.toString();
+        numberValue = input;
     }
 
     public String getStringValue() {
@@ -35,5 +37,13 @@ public class Number {
 
     public void setNumberProperties(List<NumberProperty> numberProperties) {
         this.numberProperties = numberProperties;
+    }
+
+    public List<String> getAllTrueProperties() {
+        return allTrueProperties;
+    }
+
+    public void setAllTrueProperties(List<String> allTrueProperties) {
+        this.allTrueProperties = allTrueProperties;
     }
 }

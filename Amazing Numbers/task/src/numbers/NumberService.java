@@ -1,5 +1,8 @@
 package numbers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NumberService {
     public void processEvenAndOddProperty(Number number) {
         Long numberValue = number.getNumberValue();
@@ -29,6 +32,22 @@ public class NumberService {
         number.getNumberProperties().add(palindromicProperty);
     }
 
+    public void processGapfulProperty(Number number) {
+        boolean isGapful = isGapful(number.getStringValue(), number.getNumberValue());
+        NumberProperty gapfulProperty = createProperty("gapful", isGapful);
+        number.getNumberProperties().add(gapfulProperty);
+    }
+
+    public void createAndSetAllTrueProperties(Number number) {
+        List<String> allTrueProperties = new ArrayList<>();
+        for (NumberProperty numberProperty : number.getNumberProperties()) {
+            if (numberProperty.isBooleanValue()) {
+                allTrueProperties.add(numberProperty.getName());
+            }
+        }
+        number.setAllTrueProperties(allTrueProperties);
+    }
+
     private static boolean isBuzz(Long numberValue) {
         boolean isDivisibleBySeven = numberValue % 7 == 0;
         boolean endsWithSeven = numberValue % 10 == 7;
@@ -43,6 +62,16 @@ public class NumberService {
         return stringValue.equals(new StringBuilder(stringValue).reverse().toString());
     }
 
+    private boolean isGapful(String stringValue, Long numberValue) {
+        if (stringValue.length() < 3) {
+            return false;
+        }
+        String firstNumber = stringValue.substring(0, 1);
+        String lastNumber = stringValue.substring(stringValue.length() - 1);
+        Long divider = Long.valueOf(firstNumber + lastNumber);
+        return numberValue % divider == 0;
+    }
+
     private NumberProperty createProperty(String name, boolean booleanValue) {
         NumberProperty numberProperty = new NumberProperty();
         numberProperty.setName(name);
@@ -54,17 +83,4 @@ public class NumberService {
     private String getResult(String name, boolean booleanValue) {
         return name + ": " + booleanValue;
     }
-
-
-
-//
-//    private static StringBuilder getReversed(String userInput) {
-//        int length = userInput.length();
-//        StringBuilder reversed = new StringBuilder(length);
-//        for (int i = length - 1; i >= 0; i--) {
-//            reversed.append(userInput.charAt(i));
-//        }
-//        return reversed.toString();
-
-//    }
 }

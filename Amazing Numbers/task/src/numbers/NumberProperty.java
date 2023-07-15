@@ -1,9 +1,18 @@
 package numbers;
 
 public class NumberProperty {
-    private boolean booleanValue = false;
-    private String result = "";
     private String name;
+    private boolean booleanValue;
+    private String result;
+
+    // Getters, Setters
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public boolean isBooleanValue() {
         return booleanValue;
@@ -19,13 +28,5 @@ public class NumberProperty {
 
     public void setResult(String result) {
         this.result = result;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 }

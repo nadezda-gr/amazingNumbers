@@ -13,4 +13,23 @@ public class PrintService {
             System.out.println(numberProperty.getResult());
         }
     }
+
+    public void printNumbers(List<Number> numbers) {
+        System.out.println();
+        for (Number number : numbers) {
+            System.out.println(number.getStringValue() + " is " + getPropertiesString(number));
+        }
+    }
+
+    private String getPropertiesString(Number number) {
+        StringBuilder sb = new StringBuilder();
+        for (String propertyName : number.getAllTrueProperties()) {
+            sb.append(propertyName + ", ");
+        }
+        String propertiesString = sb.toString();
+        if (propertiesString.isEmpty()) {
+            return "";
+        }
+        return propertiesString.substring(0, propertiesString.length() - 2);
+    }
 }
