@@ -38,6 +38,12 @@ public class NumberService {
         number.getNumberProperties().add(gapfulProperty);
     }
 
+    public void processSpyProperty(Number number) {
+        boolean isSpy = isSpy(number.getStringValue());
+        NumberProperty spyProperty = createProperty("spy", isSpy);
+        number.getNumberProperties().add(spyProperty);
+    }
+
     public void createAndSetAllTrueProperties(Number number) {
         List<String> allTrueProperties = new ArrayList<>();
         for (NumberProperty numberProperty : number.getNumberProperties()) {
@@ -70,6 +76,18 @@ public class NumberService {
         String lastNumber = stringValue.substring(stringValue.length() - 1);
         Long divider = Long.valueOf(firstNumber + lastNumber);
         return numberValue % divider == 0;
+    }
+
+    private boolean isSpy(String numberValue) {
+        int sum = 0;
+        int product = 1;
+
+        for (char digit : numberValue.toCharArray()) {
+            int num = Character.getNumericValue(digit);
+            sum += num;
+            product *= num;
+        }
+        return sum == product;
     }
 
     private NumberProperty createProperty(String name, boolean booleanValue) {

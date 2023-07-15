@@ -689,49 +689,6 @@ files:
         enum Parameter {ONE, TWO, THREE}
     }
   learner_created: false
-- name: src/numbers/PrintResultService.java
-  visible: true
-  text: |
-    package numbers;
-
-    import static java.lang.System.out;
-    import static numbers.NumberService.*;
-
-    public class PrintResultService {
-
-        public static void printOneNumberResult(Long userNumber, String userStartNumber) {
-            out.println("\nProperties of " + userNumber);
-            out.println(Properties.EVEN.getText() + ": " + parityOfNumber(userNumber));
-            out.println(Properties.ODD.getText() + ": " + !parityOfNumber(userNumber));
-            out.println(Properties.BUZZ.getText() + ": " + isABuzzNumber(userNumber));
-            out.println(Properties.DUCK.getText() + ": " + isADuckNumber(userStartNumber));
-            out.println(Properties.PALINDROMIC.getText() + ": " + isAPalindromic(userStartNumber));
-            out.println(Properties.GAPFUL.getText() + ": " + isAGapfulNumber(userStartNumber, userNumber));
-        }
-
-        public static void printMoreNumbersResult(Long number, String numberAsString) {
-            String result = "";
-            if (parityOfNumber(number)) {
-                result += Properties.EVEN.getText();
-            } else if (!parityOfNumber(number)) {
-                result += Properties.ODD.getText();
-            }
-            if (isABuzzNumber(number)) {
-                result += Properties.BUZZ.getText();
-            }
-            if (isADuckNumber(numberAsString)) {
-                result += Properties.DUCK.getText();
-            }
-            if (isAPalindromic(numberAsString)) {
-                result += Properties.PALINDROMIC.getText();
-            }
-            if (isAGapfulNumber(numberAsString, number)) {
-                result += Properties.GAPFUL.getText();
-            }
-            out.println(number + " is " + result);
-        }
-    }
-  learner_created: true
 - name: src/numbers/NumberService.java
   visible: true
   text: |+
@@ -786,33 +743,239 @@ files:
     }
 
   learner_created: true
-- name: src/numbers/Properties.java
+- name: src/numbers/ValidationService.java
   visible: true
   text: |
     package numbers;
 
-    public enum Properties {
-        EVEN(" even"),
-        ODD(" odd"),
-        BUZZ(" buzz"),
-        DUCK(" duck"),
-        PALINDROMIC(" palindromic"),
-        GAPFUL(" gapful");
+    public class ValidationService {
 
-        private final String text;
-
-        Properties(String text) {
-            this.text = text;
+        public static Long getValidFirstNaturalNumber(String input) throws Exception {
+            try {
+                long number = Long.parseLong(input);
+                validateNaturalNumber(number);
+                return number;
+            } catch (NumberFormatException e) {
+                throw new Exception("\nThe first parameter should be a natural number or zero.");
+            }
         }
 
-        public String getText() {
-            return text;
+        public static Long getValidSecondNaturalNumber(String input) throws Exception {
+            try {
+                Long secondNaturalNumber = Long.parseLong(input);
+                if (secondNaturalNumber < 1) {
+                    throw new Exception("\nThe second parameter should be a natural number.");
+                }
+                return secondNaturalNumber;
+            } catch (NumberFormatException e) {
+                throw new Exception("\nThe second parameter should be a natural number.");
+            }
+        }
+
+        public static void validateNaturalNumber(Long numberValue) throws Exception {
+            if (numberValue < 1) {
+                throw new Exception("\nThe first parameter should be a natural number or zero.");
+            }
+        }
+    }
+  learner_created: true
+- name: src/numbers/NumberProperty.java
+  visible: true
+  text: |
+    package numbers;
+
+    public class NumberProperty {
+        private String name;
+        private boolean booleanValue;
+        private String result;
+
+        // Getters, Setters
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isBooleanValue() {
+            return booleanValue;
+        }
+
+        public void setBooleanValue(boolean booleanValue) {
+            this.booleanValue = booleanValue;
+        }
+
+        public String getResult() {
+            return result;
+        }
+
+        public void setResult(String result) {
+            this.result = result;
+        }
+    }
+  learner_created: true
+- name: src/numbers/PrintService.java
+  visible: true
+  text: |
+    package numbers;
+
+    import java.util.List;
+    import java.util.Locale;
+
+    public class PrintService {
+
+        public void printNumber(Number number) {
+            List<NumberProperty> numberProperties = number.getNumberProperties();
+            String formattedNumber = String.format(Locale.US, "%,d", number.getNumberValue());
+            System.out.println("\nProperties of " + formattedNumber);
+            for (NumberProperty numberProperty : numberProperties) {
+                System.out.println(numberProperty.getResult());
+            }
+        }
+
+        public void printNumbers(List<Number> numbers) {
+            System.out.println();
+            for (Number number : numbers) {
+                System.out.println(number.getStringValue() + " is " + getPropertiesString(number));
+            }
+        }
+
+        private String getPropertiesString(Number number) {
+            StringBuilder sb = new StringBuilder();
+            for (String propertyName : number.getAllTrueProperties()) {
+                sb.append(propertyName + ", ");
+            }
+            String propertiesString = sb.toString();
+            if (propertiesString.isEmpty()) {
+                return "";
+            }
+            return propertiesString.substring(0, propertiesString.length() - 2);
+        }
+    }
+  learner_created: true
+- name: test/BuzzChecker.java
+  visible: true
+  text: |
+    import util.Checker;
+    import util.UserProgram;
+
+    import java.util.Objects;
+    import java.util.regex.Pattern;
+
+    public class BuzzChecker extends Checker {
+        private static final Pattern BUZZ_NUMBER = Pattern.compile(
+                "is(?<buzz>n't| not)?+( a)?+ buzz", Pattern.CASE_INSENSITIVE);
+        private static final Pattern EXPLANATION = Pattern.compile(
+                "is divisible by 7 and ends with 7"
+                        + "|is divisible by 7"
+                        + "|ends with 7"
+                        + "|is neither divisible by 7 nor does it end with 7",
+                Pattern.CASE_INSENSITIVE);
+
+        private final long number;
+
+        BuzzChecker(long number) {
+            this.number = number;
+            this.validator = this::test;
+        }
+
+        public boolean test(UserProgram program) {
+            final var matcher = BUZZ_NUMBER.matcher(program.getOutput());
+            if (!matcher.find()) {
+                feedback = "You should check whether is the number is a Buzz number or not.";
+                return false;
+            }
+            final var isDivisible = number % 7 == 0;
+            final var isEndsWith7 = number % 10 == 7;
+            final var isBuzz = isDivisible || isEndsWith7;
+            final var actual = matcher.group("buzz") == null;
+
+            if (actual != isBuzz) {
+                final var expectedMessage = isBuzz ? "" : " not";
+                final var actualMessage = Objects.toString(matcher.group("buzz"), "");
+                feedback = "For {0} expected: \"is{1} a Buzz number\". Actual output: \"is{2} a Buzz number.";
+                parameters = new Object[]{number, expectedMessage, actualMessage};
+                return false;
+            }
+
+            final var explanation = isBuzz ? isDivisible ? isEndsWith7
+                    ? "is divisible by 7 and ends with 7"
+                    : "is divisible by 7"
+                    : "ends with 7"
+                    : "is neither divisible by 7 nor does it end with 7";
+
+
+            if (!matcher.usePattern(EXPLANATION).find()) {
+                feedback = "The program should print an explanation by which criterion this number is a buzz number";
+                return false;
+            }
+            if (!matcher.group().equalsIgnoreCase(explanation)) {
+                feedback = "Expected explanation is \"{0}\". Actual explanation is \"{1}\".";
+                parameters = new Object[]{explanation, matcher.group()};
+                return false;
+            }
+            return true;
+        }
+    }
+  learner_created: true
+- name: src/numbers/Number.java
+  visible: true
+  text: |
+    package numbers;
+
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public class Number {
+        private String stringValue;
+        private Long numberValue;
+        private List<NumberProperty> numberProperties = new ArrayList<>();
+
+        private List<String> allTrueProperties = new ArrayList<>();
+
+        public Number(Long input) {
+            stringValue = input.toString();
+            numberValue = input;
+        }
+
+        public String getStringValue() {
+            return stringValue;
+        }
+
+        public void setStringValue(String stringValue) {
+            this.stringValue = stringValue;
+        }
+
+        public Long getNumberValue() {
+            return numberValue;
+        }
+
+        public void setNumberValue(Long numberValue) {
+            this.numberValue = numberValue;
+        }
+
+        public List<NumberProperty> getNumberProperties() {
+            return numberProperties;
+        }
+
+        public void setNumberProperties(List<NumberProperty> numberProperties) {
+            this.numberProperties = numberProperties;
+        }
+
+        public List<String> getAllTrueProperties() {
+            return allTrueProperties;
+        }
+
+        public void setAllTrueProperties(List<String> allTrueProperties) {
+            this.allTrueProperties = allTrueProperties;
         }
     }
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13202#comment
 status: Solved
 feedback:
-  message: Congratulations!
-  time: "Sat, 27 May 2023 08:47:55 UTC"
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Sat, 15 Jul 2023 11:32:53 UTC"
 record: 5

@@ -341,11 +341,9 @@ files:
   visible: true
   learner_created: true
 feedback_link: https://hyperskill.org/learn/step/13198#comment
-status: Failed
+status: Solved
 feedback:
-  message: |-
-    Invalid test class &#39;BuzzChecker&#39;:
-      1. Test class should have exactly one public constructor
-      2. No runnable methods
-  time: "Fri, 14 Jul 2023 16:20:31 UTC"
+  message: Well done! You've finished the project. Select a new project on <a href="https://hyperskill.org/projects">Hyperskill</a>
+    to continue learning.
+  time: "Fri, 14 Jul 2023 16:28:11 UTC"
 record: 1
