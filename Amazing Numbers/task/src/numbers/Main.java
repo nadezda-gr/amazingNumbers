@@ -17,7 +17,7 @@ public class Main {
 
         while (true) {
             System.out.println("\nEnter a request:");
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().toLowerCase();
             String[] inputSplit = input.split(" ");
             if (input.equals(EXIT_REQUEST)) {
                 break;
@@ -31,10 +31,11 @@ public class Main {
             } else if (inputSplit.length == 2) {
                 processNumbersInBetween(inputSplit[0], inputSplit[1]);
             } else {
-                processNumbersInBetweenWithSpecificProperty(inputSplit[0], inputSplit[1], inputSplit[2].toLowerCase());
+                List<String> searchList = getSearchList(inputSplit);
+                processNumbersInBetweenWithSpecificProperty(inputSplit[0], inputSplit[1], searchList);
             }
         }
-        System.out.println("Goodbye!");
+        System.out.println("\nGoodbye!");
     }
 
     private static void processSingleNumber(String input) {
@@ -55,8 +56,8 @@ public class Main {
         printService.printNumbers(numbers);
     }
 
-    private static void processNumbersInBetweenWithSpecificProperty(String firstNumberInput, String secondNumberInput, String requiredProperty) {
-        List<Number> numbers = getNumbersInBetweenWithSpecificProperty(firstNumberInput, secondNumberInput, requiredProperty);
+    private static void processNumbersInBetweenWithSpecificProperty(String firstNumberInput, String secondNumberInput, List<String> searchList) {
+        List<Number> numbers = getNumbersInBetweenWithSpecificProperty(firstNumberInput, secondNumberInput, searchList);
         PrintService printService = new PrintService();
         printService.printNumbers(numbers);
     }
@@ -78,17 +79,18 @@ public class Main {
         return numbers;
     }
 
-    private static List<Number> getNumbersInBetweenWithSpecificProperty(String firstNumberInput, String secondNumberInput, String requiredProperty) {
+    private static List<Number> getNumbersInBetweenWithSpecificProperty(String firstNumberInput, String secondNumberInput, List<String> searchList) {
         List<Number> numbers = new ArrayList<>();
         try {
-            ValidationService.validateAllowedPropertySearch(requiredProperty);
+            ValidationService.validateMutuallyExclusiveProperties(searchList);
+            ValidationService.validateAllowedPropertySearch(searchList);
             Long naturalNumber = ValidationService.getValidFirstNaturalNumber(firstNumberInput);
             Long requiredCounter = ValidationService.getValidSecondNaturalNumber(secondNumberInput);
             while (requiredCounter > 0) {
                 Number number = new Number(naturalNumber);
                 processNumberProperties(number);
                 naturalNumber++;
-                if (number.getAllTrueProperties().contains(requiredProperty)) {
+                if (number.getAllTrueProperties().containsAll(searchList)) {
                     numbers.add(number);
                     requiredCounter--;
                 }
@@ -99,6 +101,14 @@ public class Main {
         return numbers;
     }
 
+    private static List<String> getSearchList(String[] inputSplit) {
+        List<String> searchList = new ArrayList<>();
+        for (int i = 2; i < inputSplit.length; i++) {
+            searchList.add(inputSplit[i]);
+        }
+        return searchList;
+    }
+
     private static void processNumberProperties(Number number) {
         NumberService numberService = new NumberService(); //et saada ligi Number klassi objektidele
         numberService.processBuzzProperty(number);
@@ -106,6 +116,8 @@ public class Main {
         numberService.processPalindromicProperty(number);
         numberService.processGapfulProperty(number);
         numberService.processSpyProperty(number);
+        numberService.processSquareProperty(number);
+        numberService.processSunnyProperty(number);
         numberService.processEvenAndOddProperty(number);
         numberService.createAndSetAllTrueProperties(number);
     }
@@ -118,6 +130,7 @@ public class Main {
                 "  * the second parameter shows how many consecutive numbers are to be printed;\n" +
                 "- two natural numbers and a property to search for;\n" +
                 "- separate the parameters with one space;\n" +
+                "- two natural numbers and two properties to search for;" +
                 "- enter 0 to exit.");
     }
 }

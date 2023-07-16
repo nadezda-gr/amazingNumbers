@@ -1,8 +1,9 @@
 package numbers;
 
+import java.util.List;
+
 public class ValidationService {
 
-    private static final String ALLOWED_PROPERTIES = "BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, EVEN, ODD";
 
     public static Long getValidFirstNaturalNumber(String input) throws Exception {
         try {
@@ -32,9 +33,31 @@ public class ValidationService {
         }
     }
 
-    public static void validateAllowedPropertySearch(String requiredProperty) throws Exception {
-        if (!ALLOWED_PROPERTIES.contains(requiredProperty.toUpperCase())) {
-            throw new Exception("\nThe property [" + requiredProperty.toUpperCase() + "] is wrong.\nAvailable properties: [" + ALLOWED_PROPERTIES + "]");
+    public static void validateAllowedPropertySearch(List<String> searchList) throws Exception {
+        List<String> notAllowedProperties = AllowedProperty.getNotAllowedPropertiesFromSearcList(searchList);
+        if (notAllowedProperties.size() == 1) {
+            String notAllowedPropertiesString = getNotAllowedPropertiesAsString(notAllowedProperties);
+            throw new Exception("\nThe property [" + notAllowedPropertiesString + "] is wrong.\nAvailable properties: [" + AllowedProperty.getAllowedPropertiesString() + "]");
+        }
+        if (notAllowedProperties.size() > 1) {
+            String notAllowedPropertiesString = getNotAllowedPropertiesAsString(notAllowedProperties);
+            throw new Exception("\nThe properties [" + notAllowedPropertiesString + "] are wrong.\nAvailable properties: [" + AllowedProperty.getAllowedPropertiesString() + "]");
+        }
+    }
+
+    private static String getNotAllowedPropertiesAsString(List<String> notAllowedProperties) {
+        StringBuilder sb = new StringBuilder();
+        for (String notAllowedProperty : notAllowedProperties) {
+            sb.append(notAllowedProperty + ", ");
+        }
+        sb.delete(sb.length() - 2, sb.length());
+        return sb.toString().toUpperCase();
+    }
+
+    public static void validateMutuallyExclusiveProperties(List<String> searchList) throws Exception {
+        String mutuallyExclusiveProperties = AllowedProperty.getMutuallyExclusivePropertiesStringIfExists(searchList);
+        if (!mutuallyExclusiveProperties.isEmpty()) {
+            throw new Exception("\nThe request contains mutually exclusive properties: [" + mutuallyExclusiveProperties + "]\nThere are no numbers with these properties.");
         }
     }
 }

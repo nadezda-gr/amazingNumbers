@@ -3,6 +3,8 @@ package numbers;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.sqrt;
+
 public class NumberService {
     public void processEvenAndOddProperty(Number number) {
         Long numberValue = number.getNumberValue();
@@ -42,6 +44,18 @@ public class NumberService {
         boolean isSpy = isSpy(number.getStringValue());
         NumberProperty spyProperty = createProperty("spy", isSpy);
         number.getNumberProperties().add(spyProperty);
+    }
+
+    public void processSquareProperty(Number number) {
+        boolean isSquare = isSquare(number.getNumberValue());
+        NumberProperty squareProperty = createProperty("square", isSquare);
+        number.getNumberProperties().add(squareProperty);
+    }
+
+    public void processSunnyProperty(Number number) {
+        boolean isSunny = isSunny(number.getNumberValue());
+        NumberProperty sunnyProperty = createProperty("sunny", isSunny);
+        number.getNumberProperties().add(sunnyProperty);
     }
 
     public void createAndSetAllTrueProperties(Number number) {
@@ -88,6 +102,14 @@ public class NumberService {
             product *= num;
         }
         return sum == product;
+    }
+
+    private boolean isSquare(Long numberValue) {
+        return sqrt(numberValue) == (int) sqrt(numberValue);
+    }
+
+    private boolean isSunny(Long numberValue) {
+        return isSquare(numberValue + 1);
     }
 
     private NumberProperty createProperty(String name, boolean booleanValue) {
