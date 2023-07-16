@@ -1,7 +1,9 @@
 package numbers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.lang.Math.sqrt;
 
@@ -62,6 +64,15 @@ public class NumberService {
         boolean isJumping = isJumping(number.getStringValue());
         NumberProperty jumpingProperty = createProperty("jumping", isJumping);
         number.getNumberProperties().add(jumpingProperty);
+    }
+
+    public void processHappyAndSadProperty(Number number) {
+        boolean isHappy = isHappy(number.getNumberValue());
+        NumberProperty happyProperty = createProperty("happy", isHappy);
+        number.getNumberProperties().add(happyProperty);
+
+        NumberProperty sadProperty = createProperty("sad", !isHappy);
+        number.getNumberProperties().add(sadProperty);
     }
 
     public void createAndSetAllTrueProperties(Number number) {
@@ -131,6 +142,26 @@ public class NumberService {
             if (Math.abs(currentDigit - nextDigit) != 1) {
                 return false;
             }
+        }
+        return true;
+    }
+
+    private boolean isHappy(Long numberValue) {
+        Set<Long> visitedNumbers = new HashSet<>();
+        while (numberValue != 1) {
+            Long currentNumber = numberValue;
+            Long sum = 0L;
+
+            while (currentNumber != 0) {
+                Long digit = currentNumber % 10;
+                sum += digit * digit;
+                currentNumber /= 10;
+            }
+            if (visitedNumbers.contains(sum)) {
+                return false;
+            }
+            visitedNumbers.add(sum);
+            numberValue = sum;
         }
         return true;
     }

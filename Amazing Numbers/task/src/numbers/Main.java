@@ -4,6 +4,7 @@ package numbers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -31,11 +32,23 @@ public class Main {
             } else if (inputSplit.length == 2) {
                 processNumbersInBetween(inputSplit[0], inputSplit[1]);
             } else {
-                List<String> searchList = getSearchList(inputSplit);
+                List<String> searchList = getSearchListWithoutAnyDuplicates(inputSplit);
                 processNumbersInBetweenWithSpecificProperty(inputSplit[0], inputSplit[1], searchList);
             }
         }
         System.out.println("\nGoodbye!");
+    }
+
+    private static void printInstructions() {
+        System.out.println("\nSupported requests:\n" +
+                "- enter a natural number to know its properties;\n" +
+                "- enter two natural numbers to obtain the properties of the list:\n" +
+                "  * the first parameter represents a starting number;\n" +
+                "  * the second parameter shows how many consecutive numbers are to be printed;\n" +
+                "- two natural numbers and properties to search for;\n" +
+                "- a property preceded by minus must not be present in numbers;\n" +
+                "- separate the parameters with one space;\n" +
+                "- enter 0 to exit.");
     }
 
     private static void processSingleNumber(String input) {
@@ -79,6 +92,14 @@ public class Main {
         return numbers;
     }
 
+    private static List<String> getSearchListWithoutAnyDuplicates(String[] inputSplit) {
+        List<String> searchList = new ArrayList<>();
+        for (int i = 2; i < inputSplit.length; i++) {
+            searchList.add(inputSplit[i]);
+        }
+        return searchList.stream().distinct().collect(Collectors.toList());
+    }
+
     private static List<Number> getNumbersInBetweenWithSpecificProperty(String firstNumberInput, String secondNumberInput, List<String> searchList) {
         List<Number> numbers = new ArrayList<>();
         try {
@@ -90,7 +111,7 @@ public class Main {
                 Number number = new Number(naturalNumber);
                 processNumberProperties(number);
                 naturalNumber++;
-                if (number.getAllTrueProperties().containsAll(searchList)) {
+                if (isNumberRequired(number, searchList)) {
                     numbers.add(number);
                     requiredCounter--;
                 }
@@ -101,16 +122,36 @@ public class Main {
         return numbers;
     }
 
-    private static List<String> getSearchList(String[] inputSplit) {
-        List<String> searchList = new ArrayList<>();
-        for (int i = 2; i < inputSplit.length; i++) {
-            searchList.add(inputSplit[i]);
+    private static boolean isNumberRequired(Number number, List<String> searchList) {
+        List<String> includesSearchList = createIncludesSearchList(searchList);
+        List<String> excludesSearchList = createExcludesSearchList(searchList);
+        return number.getAllTrueProperties().containsAll(includesSearchList)
+                && !number.getAllTrueProperties().stream().anyMatch(excludesSearchList::contains);
+    }
+
+    private static List<String> createIncludesSearchList(List<String> searchList) {
+        List<String> includesSearchList = new ArrayList<>();
+        for (String searchCriteria : searchList) {
+            if (!searchCriteria.startsWith("-")) {
+                includesSearchList.add(searchCriteria);
+            }
         }
-        return searchList;
+        return includesSearchList;
+    }
+
+    private static List<String> createExcludesSearchList(List<String> searchList) {
+        List<String> excludesSearchList = new ArrayList<>();
+        for (String searchCriteria : searchList) {
+            if (searchCriteria.startsWith("-")) {
+                excludesSearchList.add(searchCriteria.replace("-", ""));
+            }
+        }
+        return excludesSearchList;
     }
 
     private static void processNumberProperties(Number number) {
         NumberService numberService = new NumberService(); //et saada ligi Number klassi objektidele
+        numberService.processEvenAndOddProperty(number);
         numberService.processBuzzProperty(number);
         numberService.processDuckProperty(number);
         numberService.processPalindromicProperty(number);
@@ -119,18 +160,7 @@ public class Main {
         numberService.processSquareProperty(number);
         numberService.processSunnyProperty(number);
         numberService.processJumpingProperty(number);
-        numberService.processEvenAndOddProperty(number);
+        numberService.processHappyAndSadProperty(number);
         numberService.createAndSetAllTrueProperties(number);
-    }
-
-    private static void printInstructions() {
-        System.out.println("\nSupported requests:\n" +
-                "- enter a natural number to know its properties;\n" +
-                "- enter two natural numbers to obtain the properties of the list:\n" +
-                "  * the first parameter represents a starting number;\n" +
-                "  * the second parameter shows how many consecutive numbers are to be printed;\n" +
-                "- two natural numbers and properties to search for;\n" +
-                "- separate the parameters with one space;\n" +
-                "- enter 0 to exit.");
     }
 }
