@@ -58,6 +58,12 @@ public class NumberService {
         number.getNumberProperties().add(sunnyProperty);
     }
 
+    public void processJumpingProperty(Number number) {
+        boolean isJumping = isJumping(number.getStringValue());
+        NumberProperty jumpingProperty = createProperty("jumping", isJumping);
+        number.getNumberProperties().add(jumpingProperty);
+    }
+
     public void createAndSetAllTrueProperties(Number number) {
         List<String> allTrueProperties = new ArrayList<>();
         for (NumberProperty numberProperty : number.getNumberProperties()) {
@@ -110,6 +116,23 @@ public class NumberService {
 
     private boolean isSunny(Long numberValue) {
         return isSquare(numberValue + 1);
+    }
+
+    private boolean isJumping(String stringValue) {
+        int length = stringValue.length();
+
+        if (length == 1) {
+            return true;
+        }
+
+        for (int i = 0; i < length - 1; i++) {
+            int currentDigit = Character.getNumericValue(stringValue.charAt(i));
+            int nextDigit = Character.getNumericValue(stringValue.charAt(i + 1));
+            if (Math.abs(currentDigit - nextDigit) != 1) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private NumberProperty createProperty(String name, boolean booleanValue) {

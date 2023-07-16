@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum AllowedProperty {
-    EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY;
+    EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING;
 
     public static String getAllowedPropertiesString() {
         StringBuilder sb = new StringBuilder();

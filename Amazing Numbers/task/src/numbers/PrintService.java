@@ -17,7 +17,8 @@ public class PrintService {
     public void printNumbers(List<Number> numbers) {
         System.out.println();
         for (Number number : numbers) {
-            System.out.println(number.getStringValue() + " is " + getPropertiesString(number));
+            String stringValue = String.format(Locale.US, "%,d", number.getNumberValue());
+            System.out.println(stringValue + " is " + getPropertiesString(number));
         }
     }
 

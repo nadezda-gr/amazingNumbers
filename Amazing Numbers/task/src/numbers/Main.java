@@ -82,10 +82,10 @@ public class Main {
     private static List<Number> getNumbersInBetweenWithSpecificProperty(String firstNumberInput, String secondNumberInput, List<String> searchList) {
         List<Number> numbers = new ArrayList<>();
         try {
-            ValidationService.validateMutuallyExclusiveProperties(searchList);
-            ValidationService.validateAllowedPropertySearch(searchList);
             Long naturalNumber = ValidationService.getValidFirstNaturalNumber(firstNumberInput);
             Long requiredCounter = ValidationService.getValidSecondNaturalNumber(secondNumberInput);
+            ValidationService.validateAllowedPropertySearch(searchList);
+            ValidationService.validateMutuallyExclusiveProperties(searchList);
             while (requiredCounter > 0) {
                 Number number = new Number(naturalNumber);
                 processNumberProperties(number);
@@ -118,6 +118,7 @@ public class Main {
         numberService.processSpyProperty(number);
         numberService.processSquareProperty(number);
         numberService.processSunnyProperty(number);
+        numberService.processJumpingProperty(number);
         numberService.processEvenAndOddProperty(number);
         numberService.createAndSetAllTrueProperties(number);
     }
@@ -128,9 +129,8 @@ public class Main {
                 "- enter two natural numbers to obtain the properties of the list:\n" +
                 "  * the first parameter represents a starting number;\n" +
                 "  * the second parameter shows how many consecutive numbers are to be printed;\n" +
-                "- two natural numbers and a property to search for;\n" +
+                "- two natural numbers and properties to search for;\n" +
                 "- separate the parameters with one space;\n" +
-                "- two natural numbers and two properties to search for;" +
                 "- enter 0 to exit.");
     }
 }
